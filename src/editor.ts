@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { MonitorEditorBase } from './editor/editor-base.js';
-import '../../core/src/editor/sensor-editor.js';
+import './editor/sensor-editor.js';
 import { AIR_QUALITY_SENSORS } from './sensors.js';
 import type { SensorsRegistry } from './ha/types.js';
 

@@ -17,6 +17,7 @@ import sv from './sv.js';
 import cs from './cs.js';
 import ca from './ca.js';
 import da from './da.js';
+import zhTW from './zh-tw.js';
 
 export const translations: Record<string, TranslationSet> = {
   en,
@@ -36,6 +37,7 @@ export const translations: Record<string, TranslationSet> = {
   cs,
   ca,
   da,
+  'zh-tw': zhTW,
 };
 
 /**

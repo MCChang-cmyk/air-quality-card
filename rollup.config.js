@@ -1,16 +1,18 @@
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
 import { readFileSync } from 'fs';
 
 const BUILD_VERSION = JSON.parse(readFileSync('./package.json', 'utf-8')).version;
 const BUILD_TIMESTAMP = new Date().toISOString().replace(/[:.T]/g, '-').substring(0, 16);
 
 export default {
-  input: 'src/air-quality-card.js',
+  input: 'src/air-quality-card.ts',
   output: {
     file: 'dist/air-quality-card.js',
     format: 'iife',
+    inlineDynamicImports: true,
     sourcemap: true,
     name: 'AirQualityCard',
     generatedCode: 'es2015',
@@ -21,6 +23,7 @@ export default {
       __BUILD_VERSION__: JSON.stringify(BUILD_VERSION),
       preventAssignment: true,
     }),
+    typescript(),
     resolve(),
     terser({
       format: { comments: false },

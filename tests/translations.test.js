@@ -29,6 +29,7 @@ const SUPPORTED_LANGUAGES = [
   'cs',
   'ca',
   'da',
+  'zh-tw',
 ];
 
 describe('Translations', () => {

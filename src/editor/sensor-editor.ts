@@ -1,6 +1,6 @@
 import { LitElement, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import type { HomeAssistant, SensorsRegistry, SensorUserConfig } from '../ha/types.js';
+import type { HomeAssistant, SensorsRegistry, SensorPreset, SensorUserConfig } from '../ha/types.js';
 import { editorText } from './editor-i18n.js';
 
 /**
@@ -210,7 +210,7 @@ export class MonitorSensorEditor extends LitElement {
    */
   private _renderScale(type: string, config: SensorUserConfig, index: number): TemplateResult {
     const usesLimits = Array.isArray(config.limits) && config.limits.length === 4;
-    const preset = this.registry[type] || {};
+    const preset: Partial<SensorPreset> = this.registry[type] ?? {};
     const inherited =
       preset.setpoint != null
         ? `${this.t('setpoint')} ${preset.setpoint} (${this.t('inherited')})`
