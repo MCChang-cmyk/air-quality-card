@@ -285,6 +285,10 @@ export class cardContent {
                 </div>
               `
             : ''}
+          <div
+            class="gauge-inset"
+            style="--gauge-inset: ${config.display.gauge_padding || '0px'};"
+          >
           <div class="sensor-gauge">
             <div class="gauge-marker-zone">
               <div
@@ -418,6 +422,7 @@ export class cardContent {
               >
             </div>
           </div>
+          </div>
         </div>
       </div>
       <div
@@ -493,6 +498,10 @@ export class cardContent {
                 </div>
               `
             : ''}
+          <div
+            class="gauge-inset"
+            style="--gauge-inset: ${config.display.gauge_padding || '0px'};"
+          >
           <div class="sensor-gauge">
             <div class="pool-monitor-container">
               ${config.display.gradient
@@ -635,6 +644,7 @@ export class cardContent {
                 >${data.setpoint_class[4]}</span
               >
             </div>
+          </div>
           </div>
         </div>
       </div>

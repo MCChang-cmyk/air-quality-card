@@ -174,6 +174,7 @@ That's it! The card uses sensible defaults for everything else.
 | `display.show_labels` | boolean | `true` | Show range labels |
 | `display.gradient` | boolean | `true` | Show gradient bar |
 | `display.blink` | boolean | `false` | Blink a reading that falls in the worst band of its scale. Honours `prefers-reduced-motion`, which replaces the blink with a static outline |
+| `display.gauge_padding` | string | `0px` | Horizontal inset for the bar, value marker, and scale labels; accepts any CSS length, e.g. `16px` or `1rem` |
 | `display.show_last_updated` | boolean | `false` | Show last update time |
 | `display.name_font_size` | string | - | Font size of the sensor name, e.g. `0.8em` |
 | `display.name_font_weight` | string | - | Font weight of the sensor name |

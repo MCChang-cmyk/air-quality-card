@@ -64,8 +64,14 @@ const lookup = (set: TranslationSet | undefined, key: string): string | undefine
   return typeof result === 'string' ? result : undefined;
 };
 
+/** Home Assistant identifies Traditional Chinese as `zh-Hant`; card configs use `zh-tw`. */
+const canonicalLanguage = (language: string): string => {
+  const normalized = language.toLowerCase();
+  return normalized === 'zh-hant' || normalized === 'zh-hant-tw' ? 'zh-tw' : normalized;
+};
+
 export const getTranslation = (lang: string, key: string): string =>
-  lookup(translations[lang], key) ?? lookup(translations.en, key) ?? key;
+  lookup(translations[canonicalLanguage(lang)], key) ?? lookup(translations.en, key) ?? key;
 
 export const formatTranslation = (
   translation: string,

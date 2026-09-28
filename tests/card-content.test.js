@@ -138,6 +138,15 @@ describe('cardContent', () => {
       expect(statics).toContain('sensor-gauge');
     });
 
+    test('insets the gauge with the configured horizontal padding', () => {
+      const result = cardContent.generateBody(
+        { ...defaultConfig, display: { ...defaultConfig.display, gauge_padding: '16px' } },
+        defaultData,
+      );
+      expect(templateParts(result).statics).toContain('gauge-inset');
+      expect(templateParts(result).statics).toContain('--gauge-inset:');
+    });
+
     test('should contain gauge-labels for absolute-positioned labels', () => {
       const result = cardContent.generateBody(defaultConfig, defaultData);
       const { statics } = templateParts(result);
@@ -229,6 +238,15 @@ describe('cardContent', () => {
       const result = cardContent.generateCompactBody(defaultConfig, defaultData);
       const { statics } = templateParts(result);
       expect(statics).toContain('section-row');
+    });
+
+    test('insets the compact gauge with the configured horizontal padding', () => {
+      const result = cardContent.generateCompactBody(
+        { ...defaultConfig, display: { ...defaultConfig.display, gauge_padding: '16px' } },
+        defaultData,
+      );
+      expect(templateParts(result).statics).toContain('gauge-inset');
+      expect(templateParts(result).statics).toContain('--gauge-inset:');
     });
 
     test('should include cursor-text in compact display', () => {

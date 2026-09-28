@@ -5,6 +5,7 @@ import { colorsSchema, displaySchema, generalSchema } from '../src/editor/ha-for
 import { DEFAULT_COLORS } from '../src/configs/config.js';
 import en from '../src/locales/en.js';
 import fr from '../src/locales/fr.js';
+import zhTW from '../src/locales/zh-tw.js';
 
 // The editor had no translation at all: every label was written in English in
 // the markup, while the card speaks seventeen languages. A Hungarian user read
@@ -24,6 +25,10 @@ describe('the editor follows the Home Assistant language', () => {
   it('falls back to English when Home Assistant says nothing', () => {
     expect(editorText(undefined, 'entity')).toBe('Entity');
     expect(editorText({}, 'entity')).toBe('Entity');
+  });
+
+  it('uses the Traditional Chinese locale name Home Assistant reports', () => {
+    expect(editorText({ language: 'zh-Hant' }, 'setpoint')).toBe(zhTW.editor.setpoint);
   });
 
   it('reads the Home Assistant language, not the card display language', () => {

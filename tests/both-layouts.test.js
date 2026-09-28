@@ -442,6 +442,7 @@ const PROBE = {
   ],
   name_font_size: [undefined, '2em'],
   name_font_weight: [undefined, '900'],
+  gauge_padding: ['0px', '16px'],
 };
 
 const probeFor = key =>

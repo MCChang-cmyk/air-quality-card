@@ -196,6 +196,7 @@ export default {
     show_units: 'Show units',
     gradient: 'Gradient bar',
     blink: 'Blink on the worst band',
+    gauge_padding: 'Gauge horizontal padding (e.g. 16px)',
     language: 'Language',
     status_entity: 'Status entity',
     name_font_size: 'Name font size (e.g. 0.8em, 14px)',

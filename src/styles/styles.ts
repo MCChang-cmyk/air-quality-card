@@ -117,8 +117,15 @@ export const styles = css`
    * render. Its own width never depends on its contents: it is a flex item
    * with flex 1 and min-width 0, so the flex line decides it.
    */
-  .sensor-gauge {
+  .gauge-inset {
     flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-inline: var(--gauge-inset, 0px);
+  }
+
+  .sensor-gauge {
+    width: 100%;
     min-width: 0;
     container-type: inline-size;
   }

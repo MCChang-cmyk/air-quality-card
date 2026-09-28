@@ -17,6 +17,7 @@ describe('Core Config', () => {
       expect(DEFAULT_DISPLAY).toHaveProperty('show_icons', true);
       expect(DEFAULT_DISPLAY).toHaveProperty('show_units', true);
       expect(DEFAULT_DISPLAY).toHaveProperty('gradient', true);
+      expect(DEFAULT_DISPLAY).toHaveProperty('gauge_padding', '0px');
       expect(DEFAULT_DISPLAY).toHaveProperty('language', 'en');
     });
   });

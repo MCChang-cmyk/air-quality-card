@@ -110,6 +110,7 @@ export default {
     show_units: '顯示單位',
     gradient: '漸層長條',
     blink: '在最差區間閃爍',
+    gauge_padding: '量尺左右留白（例如 16px）',
     language: '語言',
     status_entity: '狀態實體',
     name_font_size: '名稱字型大小（例如 0.8em、14px）',

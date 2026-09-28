@@ -106,6 +106,8 @@ export interface DisplayConfig {
    * now and a number does not survive translation, a preset change or a unit.
    */
   blink: boolean;
+  /** Horizontal inset applied consistently to the gauge, its marker, and labels. */
+  gauge_padding: string;
   language: string;
   name_font_size?: string;
   name_font_weight?: string;
