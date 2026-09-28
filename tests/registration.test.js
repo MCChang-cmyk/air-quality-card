@@ -20,7 +20,7 @@ describe('card registration survives a name collision', () => {
     if (!customElements.get('air-quality-card')) {
       customElements.define('air-quality-card', Squatter);
     }
-    await expect(import('../../air-quality/src/air-quality-card.js')).resolves.toBeDefined();
+    await expect(import('../src/air-quality-card.js')).resolves.toBeDefined();
   });
 
   it('leaves the element that got there first in place', () => {

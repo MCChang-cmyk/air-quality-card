@@ -1,15 +1,10 @@
 import { describe, test, expect } from 'vitest';
 import { translations, getTranslation, formatTranslation } from '../src/locales/translations.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { AquariumMonitorCard } from '../../aquarium-monitor/src/aquarium-monitor-card.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
-import { SensorMonitorCard } from '../../sensor-monitor/src/sensor-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // Asked of the cards rather than listed here: a list would be an eighth one to
 // keep by hand, and forgetting it is the mistake this file exists to catch.
-const CARD_TYPES = [PoolMonitorCard, AquariumMonitorCard, AirQualityCard, SensorMonitorCard].map(
-  Card => Card.CARD_INFO.cardType,
-);
+const CARD_TYPES = [AirQualityCard.CARD_INFO.cardType];
 
 const SUPPORTED_LANGUAGES = [
   'en',

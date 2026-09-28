@@ -15,7 +15,7 @@ import { AIR_QUALITY_SENSORS } from '../src/sensors.js';
 // declared as ours. Those two never blur into each other, and a bound that is
 // neither does not ship.
 //
-// Reference for the shape: packages/aquarium-monitor/tests/nitrogen-bands.test.js.
+// Reference for the shape: the monotonic-band coverage in this test suite.
 
 // Line endings are normalised because git checks the file out with CRLF on
 // Windows, which would leave a stray \r on every comment line collected here.

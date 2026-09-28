@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { translations } from '../src/locales/translations.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { AquariumMonitorCard } from '../../aquarium-monitor/src/aquarium-monitor-card.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // A preset with no name renders its own key. The air card wrote `sensor.pm25`
 // under the bar, and the aquarium card `sensor.ammonia`, on every install in
@@ -13,11 +11,7 @@ import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
 // preset count and the options table. Adding a preset and forgetting its name
 // is the same mistake each of those made, so it gets the same treatment.
 
-const CARDS = {
-  'pool-monitor': PoolMonitorCard,
-  'aquarium-monitor': AquariumMonitorCard,
-  'air-monitor': AirQualityCard,
-};
+const CARDS = { 'air-monitor': AirQualityCard };
 
 const presets = Object.entries(CARDS).flatMap(([card, Card]) =>
   Object.keys(Card.SENSORS).map(key => [card, key]),

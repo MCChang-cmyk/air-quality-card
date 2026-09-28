@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { render } from 'lit';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
-// Hebrew ships in `core/src/locales/he.ts` and is published at every release,
+// Hebrew ships with this card and is published at every release,
 // and until #121 nobody had put a card in front of a right-to-left reading
 // direction. The measurement was taken on the bench on 2026-08-23, Home
 // Assistant interface in Hebrew, the four cards side by side with the same
@@ -23,11 +23,11 @@ import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
 // Nothing here needs a browser: all three defects were mechanical, and the
 // mechanism is what a test can hold.
 
-const root = resolve(__dirname, '../..');
+const root = resolve(__dirname, '..');
 const read = p => readFileSync(resolve(root, p), 'utf8');
 
 const STATES = {
-  'sensor.pool_temperature': {
+  'sensor.temperature': {
     state: '25.7',
     attributes: { unit_of_measurement: '°C' },
     last_updated: '2026-08-23T10:00:00Z',
@@ -35,12 +35,12 @@ const STATES = {
 };
 
 const paint = compact => {
-  const card = new PoolMonitorCard();
+  const card = new AirQualityCard();
   card.hass = { states: STATES, entities: {} };
   card.setConfig({
     title: 'Essential sensors',
     display: { compact },
-    sensors: { temperature: { entity: 'sensor.pool_temperature' } },
+    sensors: { temperature: { entity: 'sensor.temperature' } },
   });
   const host = document.createElement('div');
   render(card.render(), host);
@@ -69,7 +69,7 @@ describe('the reading is isolated from the text around it', () => {
   });
 
   it('both call the same helper, so a fix cannot land on one side only', () => {
-    const source = read('core/src/components/card-content.ts');
+    const source = read('src/components/card-content.ts');
     expect(source.match(/generateReading\(data\)/g)).toHaveLength(2);
     expect(source).not.toMatch(/\$\{data\.value\} \$\{data\.unit\}(?!<\/bdi>)/);
   });
@@ -80,7 +80,7 @@ describe('the reading is isolated from the text around it', () => {
 // against the card edge; the logical forms follow the reading direction and
 // render identically in a left-to-right card.
 describe('the insets follow the reading direction', () => {
-  const styles = read('core/src/styles/styles.ts');
+  const styles = read('src/styles/styles.ts');
   const rule = name => styles.match(new RegExp(`\\.${name} \\{[^}]*\\}`, 's'))?.[0] ?? '';
 
   it('the card title is inset from the side it starts on', () => {

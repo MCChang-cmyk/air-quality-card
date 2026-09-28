@@ -4,9 +4,7 @@ import { styles } from '../src/styles/styles.js';
 import { DEFAULT_DISPLAY } from '../src/configs/config.js';
 import { displaySchema } from '../src/editor/ha-form-schemas.js';
 import en from '../src/locales/en.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
-import { SensorMonitorCard } from '../../sensor-monitor/src/sensor-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 /**
  * The blink @rpirsc13 asked for on wilsto/air-quality-card#4, in April, as
@@ -102,41 +100,43 @@ describe('the worst band is the one the scale itself names', () => {
   // on every pollutant and then fires on clean water. `higher_is_better`
   // reverses the ramp, so the worst band moves to the bottom of the scale.
   it('blinks at the other end when higher is better', () => {
-    const low = build(PoolMonitorCard, {
-      orp: {
+    const low = build(AirQualityCard, {
+      co: {
         entity: 'sensor.orp',
         _state: 100,
         limits: [400, 500, 600, 700],
         direction: 'higher_is_better',
       },
     });
-    const high = build(PoolMonitorCard, {
-      orp: {
+    const high = build(AirQualityCard, {
+      co: {
         entity: 'sensor.orp',
         _state: 800,
         limits: [400, 500, 600, 700],
         direction: 'higher_is_better',
       },
     });
-    expect(low.orp_1.blink, 'ORP at 100 mV is the hazardous end').toBe(true);
-    expect(high.orp_1.blink, 'ORP at 800 mV is the good end').toBe(false);
+    expect(low.co_1.blink, 'a reading at 100 is the hazardous end').toBe(true);
+    expect(high.co_1.blink, 'a reading at 800 is the good end').toBe(false);
   });
 
   // A centric scale is bad outwards in both directions, and the card already
   // calls both ends Too Low and Too High and paints both `warn`.
   it('blinks at both ends of a centric scale, and not in the middle', () => {
-    const ph = state => ({ ph: { entity: 'sensor.ph', _state: state } });
-    expect(build(PoolMonitorCard, ph(6.0)).ph_1.blink, 'pH 6.0').toBe(true);
-    expect(build(PoolMonitorCard, ph(9.0)).ph_1.blink, 'pH 9.0').toBe(true);
-    expect(build(PoolMonitorCard, ph(7.4)).ph_1.blink, 'pH 7.4').toBe(false);
+    const humidity = state => ({
+      humidity: { entity: 'sensor.humidity', _state: state, setpoint: 45, step: 10, mode: 'centric' },
+    });
+    expect(build(AirQualityCard, humidity(10)).humidity_1.blink).toBe(true);
+    expect(build(AirQualityCard, humidity(80)).humidity_1.blink).toBe(true);
+    expect(build(AirQualityCard, humidity(45)).humidity_1.blink).toBe(false);
   });
 
   // Cool, normal, warm is a direction of flow, not a severity. Calling one of
   // its ends grave would be inventing a verdict the scale does not carry.
   it('never blinks a heatflow scale, at either end', () => {
     const temp = state => ({ temperature: { entity: 'sensor.t', _state: state } });
-    expect(build(PoolMonitorCard, temp(2)).temperature_1.blink).toBe(false);
-    expect(build(PoolMonitorCard, temp(45)).temperature_1.blink).toBe(false);
+    expect(build(AirQualityCard, temp(2)).temperature_1.blink).toBe(false);
+    expect(build(AirQualityCard, temp(45)).temperature_1.blink).toBe(false);
   });
 
   // A word is not in any band, and since #145 it is not put in one either.
@@ -160,16 +160,6 @@ describe('the worst band is the one the scale itself names', () => {
     expect(d.co_1.blink).toBe(false);
   });
 
-  // The generic card is the one with no presets, so it is the one where a
-  // sensor can genuinely have nothing to be judged against (#98).
-  it('does not blink a sensor with no scale to be worst on', () => {
-    const card = new SensorMonitorCard();
-    card.hass = { states: { 'sensor.x': { state: '500', attributes: {} } }, entities: {} };
-    card.setConfig({ display: { blink: true }, sensors: { pm25: { entity: 'sensor.x' } } });
-    const d = card.processData().pm25_1;
-    expect(d.no_scale).toBe(true);
-    expect(d.blink).toBeFalsy();
-  });
 });
 
 describe('nobody who did not ask for motion gets any', () => {

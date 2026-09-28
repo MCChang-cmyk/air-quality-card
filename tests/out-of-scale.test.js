@@ -2,7 +2,7 @@ import { describe, it, test, expect } from 'vitest';
 import { outOfScale, overflowGlyph, overflowLabelKey } from '../src/scale.js';
 import { cardContent, markerShift } from '../src/components/card-content.js';
 import { translations, getTranslation } from '../src/locales/translations.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 /**
  * A value outside the bar is pinned to the end of it, so the position alone
@@ -130,7 +130,7 @@ describe('the card computes the overflow from the reading, not from the position
   };
 
   const build = sensor => {
-    const card = new PoolMonitorCard();
+    const card = new AirQualityCard();
     card.hass = hass;
     card.setConfig({ sensors: { co: sensor } });
     return card.processData().co_1;

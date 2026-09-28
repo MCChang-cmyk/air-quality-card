@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'lit';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // monitor-cards#61, from @rpirsc13's fork, which had built `window_entity` and
 // `fan_entity` to shorten the road between "the air is bad" and "open the

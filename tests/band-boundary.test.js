@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // Why this file exists.
 //

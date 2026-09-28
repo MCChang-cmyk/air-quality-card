@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { SensorMonitorCard } from '../../sensor-monitor/src/sensor-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // @genem2 on sensor-monitor-card#3: "Any chance it can be made to use a value
 // from an attribute? (Hate to make a bunch of template sensors.)"
@@ -21,10 +20,10 @@ const hass = {
 };
 
 function build(sensor) {
-  const card = new PoolMonitorCard();
+  const card = new AirQualityCard();
   card.hass = hass;
-  card.setConfig({ sensors: { ph: sensor } });
-  return card.processData().ph_1;
+  card.setConfig({ sensors: { co: sensor } });
+  return card.processData().co_1;
 }
 
 describe('a sensor can read an attribute instead of the state', () => {
@@ -61,7 +60,7 @@ describe('a sensor can read an attribute instead of the state', () => {
 // #40, #56, #68), which is why it gets a test rather than a one-line patch.
 describe('decimals follow whatever supplies the number', () => {
   const climate = (attrs, cfg) => {
-    const card = new SensorMonitorCard();
+    const card = new AirQualityCard();
     card.hass = {
       states: {
         'climate.living': {
@@ -72,8 +71,8 @@ describe('decimals follow whatever supplies the number', () => {
       },
       entities: {},
     };
-    card.setConfig({ sensors: { target: { entity: 'climate.living', name: 'Target', ...cfg } } });
-    return card.processData().target_1;
+    card.setConfig({ sensors: { temperature: { entity: 'climate.living', ...cfg } } });
+    return card.processData().temperature_1;
   };
 
   it('keeps the decimal of an attribute on an entity whose state is a word', () => {
@@ -97,14 +96,14 @@ describe('decimals follow whatever supplies the number', () => {
   });
 
   it('leaves a plain state sensor alone', () => {
-    const card = new SensorMonitorCard();
+    const card = new AirQualityCard();
     card.hass = {
       states: {
         'sensor.t': { state: '20.5', attributes: {}, last_updated: '2026-08-16T10:00:00Z' },
       },
       entities: {},
     };
-    card.setConfig({ sensors: { t: { entity: 'sensor.t', name: 'T' } } });
-    expect(card.processData().t_1.value).toBe(20.5);
+    card.setConfig({ sensors: { temperature: { entity: 'sensor.t' } } });
+    expect(card.processData().temperature_1.value).toBe(20.5);
   });
 });

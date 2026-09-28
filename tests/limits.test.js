@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // PO decision 2026-08-15 (#7): a monotonic quantity is expressed with explicit
 // `limits` plus a reading direction, instead of bending `setpoint`.
@@ -8,15 +8,15 @@ import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
 // (pool-monitor-card#85) where higher is better.
 
 function build(sensor, state) {
-  const card = new PoolMonitorCard();
+  const card = new AirQualityCard();
   card.hass = {
     states: {
       'sensor.x': { state: String(state), attributes: {}, last_updated: '2026-08-15T10:00:00Z' },
     },
     entities: {},
   };
-  card.setConfig({ sensors: { pm25: sensor } });
-  return card.processData().pm25_1;
+  card.setConfig({ sensors: { temperature: sensor } });
+  return card.processData().temperature_1;
 }
 
 const PM25 = { entity: 'sensor.x', limits: [2, 5, 10, 15], min: 0, max: 20 };

@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'lit';
 import { cardContent } from '../src/components/card-content.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // Found by looking at the screen, not by unit tests. The card announced 20 ppm
 // of carbon monoxide as "Ideal", more than twice the WHO eight-hour guideline
@@ -25,16 +24,16 @@ const co = ppm => {
   return card.processData().co_1;
 };
 
-const pool = (sensor, state) => {
-  const card = new PoolMonitorCard();
+const air = (sensor, state, type = 'pm25') => {
+  const card = new AirQualityCard();
   card.hass = {
     states: {
       'sensor.x': { state: String(state), attributes: {}, last_updated: '2026-08-15T10:00:00Z' },
     },
     entities: {},
   };
-  card.setConfig({ sensors: { pm25: sensor } });
-  return card.processData().pm25_1;
+  card.setConfig({ sensors: { [type]: sensor } });
+  return card.processData()[`${type}_1`];
 };
 
 describe('a monotonic scale is not described as a centric one', () => {
@@ -66,8 +65,8 @@ describe('a monotonic scale is not described as a centric one', () => {
       min: 300,
       max: 900,
     };
-    expect(pool(orp, 800).state).toBe('Good');
-    expect(pool(orp, 320).state).toBe('Very Poor');
+    expect(air(orp, 800).state).toBe('Good');
+    expect(air(orp, 320).state).toBe('Very Poor');
   });
 });
 
@@ -119,7 +118,11 @@ describe('the bar is painted the way the reading is classified', () => {
 
   it('leaves a centric scale alone', () => {
     expect(
-      pool({ entity: 'sensor.x', setpoint: 7.2, step: 0.2 }, 7.2).monotonic_stops,
+      air(
+        { entity: 'sensor.x', setpoint: 7.2, step: 0.2, mode: 'centric' },
+        7.2,
+        'temperature',
+      ).monotonic_stops,
     ).toBeUndefined();
   });
 });

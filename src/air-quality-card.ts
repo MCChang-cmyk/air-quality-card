@@ -41,7 +41,7 @@ const LEGACY = 'air-quality-card';
   name: 'Air Monitor Card',
   description: 'Monitor indoor air quality (CO2, PM2.5, VOC, humidity, temperature, etc.)',
   preview: true,
-  documentationURL: 'https://github.com/wilsto/air-quality-card',
+  documentationURL: 'https://github.com/MCChang-cmyk/air-quality-card',
   // Home Assistant 2026.6 and later: offer this card when the user picks an
   // entity this card actually has a preset for. Returns null otherwise, so
   // the picker does not fill up with cards that cannot render the reading.
@@ -71,7 +71,7 @@ export class AirQualityCard extends MonitorCardBase {
   static SENSORS: SensorsRegistry = AIR_QUALITY_SENSORS;
 
   static IMAGE_BASE_URL =
-    'https://raw.githubusercontent.com/wilsto/air-quality-card/master/resources';
+    'https://raw.githubusercontent.com/MCChang-cmyk/air-quality-card/master/resources';
 
   static async getConfigElement(): Promise<HTMLElement> {
     await import('./editor.js');

@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import '../../pool-monitor/src/pool-monitor-card.js';
-import '../../aquarium-monitor/src/aquarium-monitor-card.js';
-import '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 import { buildEntitySuggestion } from '../src/entity-suggestion.js';
-import { POOL_SENSORS } from '../../pool-monitor/src/sensors.js';
 
 // The air quality card answers to two element names since wilsto/air-quality-card#3:
 // the disputed `air-quality-card`, kept for existing configurations, and this
@@ -25,11 +22,9 @@ const suggest = (cardType, entityId, attributes = {}) => {
   return card.getEntitySuggestion(hass, entityId);
 };
 
-describe('the three domain cards register a suggestion function', () => {
-  it('all three opt in', () => {
-    for (const t of ['pool-monitor-card', 'aquarium-monitor-card', AIR]) {
-      expect(typeof cards()[t]?.getEntitySuggestion, t).toBe('function');
-    }
+describe('the air quality card registers a suggestion function', () => {
+  it('opts in', () => {
+    expect(typeof cards()[AIR]?.getEntitySuggestion).toBe('function');
   });
 });
 
@@ -38,16 +33,6 @@ describe('what Home Assistant already knows wins', () => {
     const s = suggest(AIR, 'sensor.hallway', { device_class: 'carbon_monoxide' });
     expect(s.config.type).toBe(`custom:${AIR}`);
     expect(s.config.sensors).toEqual({ co: { entity: 'sensor.hallway' } });
-  });
-
-  it('a pH probe is offered by both the pool and the aquarium card', () => {
-    const attrs = { device_class: 'ph' };
-    expect(suggest('pool-monitor-card', 'sensor.probe', attrs).config.sensors).toEqual({
-      ph: { entity: 'sensor.probe' },
-    });
-    expect(suggest('aquarium-monitor-card', 'sensor.probe', attrs).config.sensors).toEqual({
-      ph: { entity: 'sensor.probe' },
-    });
   });
 
   it('a device class the card has no preset for suggests nothing', () => {
@@ -61,8 +46,8 @@ describe('what Home Assistant already knows wins', () => {
   // untested and free to rot.
   it('a mapping that points at a preset the card does not have is ignored', () => {
     const broken = buildEntitySuggestion(
-      'pool-monitor-card',
-      POOL_SENSORS,
+      AIR,
+      AirQualityCard.SENSORS,
       { temperature: 'temperatuer' },
       [],
     );
@@ -74,8 +59,8 @@ describe('what Home Assistant already knows wins', () => {
 
   it('and a mapping that points at a real preset still works', () => {
     const ok = buildEntitySuggestion(
-      'pool-monitor-card',
-      POOL_SENSORS,
+      AIR,
+      AirQualityCard.SENSORS,
       { temperature: 'temperature' },
       [],
     );
@@ -88,29 +73,25 @@ describe('what Home Assistant already knows wins', () => {
 
 describe('the measurements Home Assistant has no device class for', () => {
   it('reads the preset out of the entity id', () => {
-    expect(suggest('pool-monitor-card', 'sensor.pool_orp').config.sensors).toEqual({
-      orp: { entity: 'sensor.pool_orp' },
-    });
-    expect(suggest('aquarium-monitor-card', 'sensor.tank_ammonia').config.sensors).toEqual({
-      ammonia: { entity: 'sensor.tank_ammonia' },
+    expect(suggest(AIR, 'sensor.living_room_pm25').config.sensors).toEqual({
+      pm25: { entity: 'sensor.living_room_pm25' },
     });
   });
 
   it('matches a multi word preset', () => {
-    expect(suggest('pool-monitor-card', 'sensor.pool_free_chlorine').config.sensors).toEqual({
-      free_chlorine: { entity: 'sensor.pool_free_chlorine' },
+    expect(suggest(AIR, 'sensor.living_room_formaldehyde').config.sensors).toEqual({
+      formaldehyde: { entity: 'sensor.living_room_formaldehyde' },
     });
   });
 
   // These two entity ids contain a preset key as a substring but not as a word:
-  // "corporate" hides "orp", "cyanide" hides "cya". A plain `includes` would
-  // claim an office energy meter as a pool redox probe.
-  it('matches on whole words, so a corporate meter is not a redox probe', () => {
-    expect(suggest('pool-monitor-card', 'sensor.corporate_power')).toBeNull();
-    expect(suggest('pool-monitor-card', 'sensor.cyanide_detector')).toBeNull();
+  // "corporate" contains "co" without it being a measurement key. A plain
+  // `includes` would claim an office energy meter as a carbon monoxide probe.
+  it('matches on whole words, so a corporate meter is not a carbon monoxide probe', () => {
+    expect(suggest(AIR, 'sensor.corporate_power')).toBeNull();
     // and the real thing still matches
-    expect(suggest('pool-monitor-card', 'sensor.pool_cya').config.sensors).toEqual({
-      cya: { entity: 'sensor.pool_cya' },
+    expect(suggest(AIR, 'sensor.indoor_co').config.sensors).toEqual({
+      co: { entity: 'sensor.indoor_co' },
     });
   });
 
@@ -131,31 +112,27 @@ describe('the measurements Home Assistant has no device class for', () => {
   });
 });
 
-describe('what no card claims', () => {
-  it('a plain temperature belongs to all four cards, so none offers itself', () => {
+describe('what the air quality card does not claim', () => {
+  it('does not claim a plain temperature reading', () => {
     const attrs = { device_class: 'temperature' };
-    for (const t of ['pool-monitor-card', 'aquarium-monitor-card', AIR]) {
-      expect(suggest(t, 'sensor.bedroom', attrs), t).toBeNull();
-    }
+    expect(suggest(AIR, 'sensor.bedroom', attrs)).toBeNull();
   });
 
   it('a plain humidity reading likewise', () => {
     const attrs = { device_class: 'humidity' };
-    for (const t of ['pool-monitor-card', 'aquarium-monitor-card', AIR]) {
-      expect(suggest(t, 'sensor.bedroom', attrs), t).toBeNull();
-    }
+    expect(suggest(AIR, 'sensor.bedroom', attrs)).toBeNull();
   });
 
   it('anything that is not a sensor or a number', () => {
-    expect(suggest('pool-monitor-card', 'light.pool_orp')).toBeNull();
-    expect(suggest('pool-monitor-card', 'binary_sensor.pool_orp')).toBeNull();
+    expect(suggest(AIR, 'light.office_co2')).toBeNull();
+    expect(suggest(AIR, 'binary_sensor.office_co2')).toBeNull();
     expect(suggest(AIR, 'switch.co2_valve')).toBeNull();
   });
 
   it('an unknown entity, and a malformed argument', () => {
-    const card = cards()['pool-monitor-card'];
-    expect(card.getEntitySuggestion({ states: {} }, 'sensor.pool_orp').config.sensors).toEqual({
-      orp: { entity: 'sensor.pool_orp' },
+    const card = cards()[AIR];
+    expect(card.getEntitySuggestion({ states: {} }, 'sensor.indoor_co').config.sensors).toEqual({
+      co: { entity: 'sensor.indoor_co' },
     });
     expect(card.getEntitySuggestion(undefined, 'sensor.nothing_here')).toBeNull();
     expect(card.getEntitySuggestion({}, null)).toBeNull();
@@ -164,9 +141,8 @@ describe('what no card claims', () => {
 
 describe('the suggested config is one the card can actually load', () => {
   it('round trips through setConfig without throwing', async () => {
-    const { PoolMonitorCard } = await import('../../pool-monitor/src/pool-monitor-card.js');
-    const s = suggest('pool-monitor-card', 'sensor.pool_orp');
-    const card = new PoolMonitorCard();
+    const s = suggest(AIR, 'sensor.indoor_co');
+    const card = new AirQualityCard();
     expect(() => card.setConfig({ ...s.config, type: undefined })).not.toThrow();
   });
 });

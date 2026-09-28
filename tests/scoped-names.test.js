@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'lit';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // `pressure` exists on two cards and means two different things: the filter on
 // a pool, the weather on an air monitor. The names table is one flat list
@@ -24,8 +23,6 @@ const build = (Card, config) => {
 const air = (extra = {}, language = 'en') =>
   build(AirQualityCard, { display: { language }, sensors: { pressure: { entity: 'sensor.baro', ...extra } } });
 
-const pool = (language = 'en') =>
-  build(PoolMonitorCard, { display: { language }, sensors: { pressure: { entity: 'sensor.baro' } } });
 
 describe('a configuration written before this change keeps working', () => {
   it('still finds its preset from the key the user wrote', () => {
@@ -38,11 +35,6 @@ describe('a configuration written before this change keeps working', () => {
     expect(data.setpoint).toBe(1013);
   });
 
-  it('and the pool card keeps its own, which are different', () => {
-    const data = pool().processData().pressure_1;
-    expect(data.unit).toBe('psi');
-    expect(data.setpoint).not.toBe(1013);
-  });
 });
 
 describe('each card names the measurement the way it means it', () => {
@@ -50,13 +42,8 @@ describe('each card names the measurement the way it means it', () => {
     expect(air().processData().pressure_1.title).toBe('Atmospheric Pressure');
   });
 
-  it('the pool card still says filter', () => {
-    expect(pool().processData().pressure_1.title).toBe('Filter Pressure');
-  });
-
-  it('in French too', () => {
+  it('uses the localised atmospheric name in French too', () => {
     expect(air({}, 'fr').processData().pressure_1.title).toBe('Pression atmosphérique');
-    expect(pool('fr').processData().pressure_1.title).toBe('Pression du filtre');
   });
 
   it('and it is what the card paints', () => {

@@ -118,7 +118,7 @@ Community-tested devices that work with this card:
 | Xiaomi/Aqara Air Quality Monitor | Xiaomi Miot / ZHA | CO2, PM2.5, temperature, humidity. Affordable and widely available. |
 | PurpleAir / SDS011 | ESPHome / REST API | Precise PM2.5/PM10 sensors for outdoor or indoor particulate monitoring. |
 
-> Know a device that works? [Open an issue](https://github.com/wilsto/air-quality-card/issues) to add it!
+> Know a device that works? [Open an issue](https://github.com/MCChang-cmyk/air-quality-card/issues) to add it!
 
 ---
 
@@ -126,14 +126,14 @@ Community-tested devices that work with this card:
 
 ### HACS (recommended)
 
-1. Open [HACS](https://hacs.xyz/) → **Frontend** → search for **Air Quality Card**
-2. Install and reload your browser
+1. Open [HACS](https://hacs.xyz/) → **Dashboards** → menu → **Custom repositories**
+2. Add `https://github.com/MCChang-cmyk/air-quality-card` as a **Dashboard**, then download it and reload your browser
 
-[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=wilsto&repository=air-quality-card&category=plugin)
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=MCChang-cmyk&repository=air-quality-card&category=plugin)
 
 ### Manual
 
-1. Download `air-quality-card.js` from the [latest release](https://github.com/wilsto/air-quality-card/releases)
+1. Download `air-quality-card.js` from the [latest release](https://github.com/MCChang-cmyk/air-quality-card/releases)
 2. Copy to `config/www/community/air-quality-card/`
 3. Add resource: `/local/community/air-quality-card/air-quality-card.js` (type: module)
 
@@ -398,15 +398,9 @@ Set one with `display.language`, or pick it in the visual editor.
 
 ---
 
-## Support
-
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://bmc.link/wilsto)
-
----
-
 ## Acknowledgments
 
-This card wouldn't be what it is today without our amazing contributors!
+This fork retains acknowledgments for the contributors to the original card.
 
 - [rpirsc13](https://github.com/rpirsc13): Custom limits approach, and the ideas harvested from his fork (quality bands, blinking alert, window and fan entities)
 - [renevelasco123](https://github.com/renevelasco123): Amazon Smart Air Quality Monitor report that led to the CO preset
@@ -433,21 +427,10 @@ This card wouldn't be what it is today without our amazing contributors!
 - [XattSPT](https://github.com/XattSPT): Catalan translation
 - [Andreasb95](https://github.com/Andreasb95): Danish translation
 
-## Monitor Cards Family
-
-This card is part of the **monitor-cards** family: same rendering engine, same features, different presets:
-
-| Card | For | Sensors |
-|------|-----|---------|
-| [Pool Monitor Card](https://github.com/wilsto/pool-monitor-card) | Pool & spa owners | 28 presets |
-| [Aquarium Monitor Card](https://github.com/wilsto/aquarium-monitor-card) | Freshwater & saltwater aquarium keepers | 15 presets |
-| [Air Monitor Card](https://github.com/wilsto/air-quality-card) | Homeowners concerned about indoor air quality | 15 presets ← *you are here* |
-| [Sensor Monitor Card](https://github.com/wilsto/sensor-monitor-card) | Home Assistant power users | unlimited (custom) |
-
 <!-- Badges -->
-[release-shield]: https://img.shields.io/github/v/release/wilsto/air-quality-card?style=flat-square
-[release-link]: https://github.com/wilsto/air-quality-card/releases/latest
-[hacs-shield]: https://img.shields.io/badge/HACS-Default-orange.svg?style=flat-square
+[release-shield]: https://img.shields.io/github/v/release/MCChang-cmyk/air-quality-card?style=flat-square
+[release-link]: https://github.com/MCChang-cmyk/air-quality-card/releases/latest
+[hacs-shield]: https://img.shields.io/badge/HACS-Custom-blue.svg?style=flat-square
 [hacs-link]: https://hacs.xyz/
-[commits-shield]: https://img.shields.io/github/commit-activity/y/wilsto/air-quality-card?style=flat-square
-[commits-link]: https://github.com/wilsto/air-quality-card/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/MCChang-cmyk/air-quality-card?style=flat-square
+[commits-link]: https://github.com/MCChang-cmyk/air-quality-card/commits/master

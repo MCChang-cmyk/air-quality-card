@@ -18,7 +18,7 @@ const LEGACY = 'air-quality-card';
 
 beforeAll(async () => {
   globalThis.__BUILD_TIMESTAMP__ = 'test';
-  await import('../../air-quality/src/air-quality-card.js');
+  await import('../src/air-quality-card.js');
 });
 
 const cardEntry = () =>

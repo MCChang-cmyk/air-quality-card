@@ -1,8 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 import { cardContent } from '../src/components/card-content.js';
 import { styles } from '../src/styles/styles.js';
 import { DEFAULT_DISPLAY } from '../src/configs/config.js';
@@ -242,10 +241,6 @@ function row(Card, sensor, state, sensorConfig = {}, extraStates = {}) {
  */
 const ROWS = [
   [
-    'pool ph, override with a word',
-    () => row(PoolMonitorCard, 'ph', 7.2, { override: true, override_value: 'override' }),
-  ],
-  [
     'air co, override with a word',
     () => row(AirQualityCard, 'co', 12, { override: true, override_value: 'OFF' }),
   ],
@@ -267,7 +262,6 @@ const ROWS = [
   ],
   ['air co, ordinary reading', () => row(AirQualityCard, 'co', 12)],
   ['air co, at the top of its scale', () => row(AirQualityCard, 'co', 900)],
-  ['pool ph, ordinary reading', () => row(PoolMonitorCard, 'ph', 7.2)],
 ];
 
 describe.each([
@@ -494,8 +488,8 @@ function built(Card, sensor, state, display) {
 const OPTION_ROWS = [
   ['air co, ideal', AirQualityCard, 'co', 3],
   ['air co, at the top of its scale', AirQualityCard, 'co', 900],
-  ['pool ph, ideal', PoolMonitorCard, 'ph', 7.2],
-  ['pool ph, far above its setpoint', PoolMonitorCard, 'ph', 9],
+  ['air temperature, ideal', AirQualityCard, 'temperature', 22],
+  ['air temperature, far above its setpoint', AirQualityCard, 'temperature', 40],
 ];
 
 /** The rows on which changing `key` changes what `generate` paints. */

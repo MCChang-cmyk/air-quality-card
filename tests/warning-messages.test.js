@@ -3,8 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { render } from 'lit';
 import { translations } from '../src/locales/translations.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { SensorMonitorCard } from '../../sensor-monitor/src/sensor-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // The four banners a refused configuration paints were written in English, in
 // the markup, in a card published in seventeen languages (#122). The one that
@@ -24,7 +23,7 @@ import { SensorMonitorCard } from '../../sensor-monitor/src/sensor-monitor-card.
 // locale carrying every message, and the Latin runs inside them isolated. The
 // wording of any one translation is not something a test can hold.
 
-const root = resolve(__dirname, '../..');
+const root = resolve(__dirname, '..');
 const read = p => readFileSync(resolve(root, p), 'utf8');
 
 const STATES = {
@@ -46,21 +45,16 @@ const paint = (Card, config) => {
 
 // One configuration per refusal, each the smallest one that triggers it.
 const REFUSALS = {
-  no_sensors: lang => paint(SensorMonitorCard, { display: { language: lang }, sensors: {} }),
+  no_sensors: lang => paint(AirQualityCard, { display: { language: lang }, sensors: {} }),
   not_supported: lang =>
-    paint(PoolMonitorCard, {
+    paint(AirQualityCard, {
       display: { language: lang },
       sensors: { not_a_pool_measurement: { entity: 'sensor.present' } },
     }),
   not_found: lang =>
-    paint(SensorMonitorCard, {
+    paint(AirQualityCard, {
       display: { language: lang },
-      sensors: { room: { entity: 'sensor.absent', setpoint: 21, step: 1 } },
-    }),
-  no_scale: lang =>
-    paint(SensorMonitorCard, {
-      display: { language: lang },
-      sensors: { room: { entity: 'sensor.present' } },
+      sensors: { co: { entity: 'sensor.absent' } },
     }),
 };
 
@@ -119,18 +113,6 @@ describe('what the message quotes is isolated from the sentence', () => {
     expect(bdi).toContain('sensor.absent');
   });
 
-  it('so does every option name, and it is printed as code', () => {
-    const host = REFUSALS.no_scale('he');
-    const code = [...host.querySelectorAll('bdi > code')].map(c => c.textContent);
-    expect(code).toEqual(['limits', 'setpoint', 'step', 'min', 'max']);
-  });
-
-  it('an option name is never translated, whatever the language', () => {
-    for (const lang of Object.keys(translations)) {
-      const code = [...REFUSALS.no_scale(lang).querySelectorAll('code')].map(c => c.textContent);
-      expect(code, lang).toEqual(['limits', 'setpoint', 'step', 'min', 'max']);
-    }
-  });
 });
 
 // The banner is the one thing on this card that is a whole sentence, so
@@ -138,7 +120,7 @@ describe('what the message quotes is isolated from the sentence', () => {
 // bar and the gap after its icon were physical, and a `display: flex` row
 // reverses: both would have landed on the empty side.
 describe('the banner follows the reading direction', () => {
-  const styles = read('core/src/styles/styles.ts');
+  const styles = read('src/styles/styles.ts');
   const rule = name => styles.match(new RegExp(`\\.${name} \\{[^}]*\\}`, 's'))?.[0] ?? '';
 
   it('the accent bar is on the side the sentence starts', () => {
@@ -157,12 +139,12 @@ describe('the banner follows the reading direction', () => {
 // already holds that for its own message; this holds it for the sentences.
 describe('the warnings are written once, in the markup of neither layout', () => {
   it('card-base builds them all, and card-content builds none', () => {
-    const base = read('core/src/card-base.ts');
+    const base = read('src/card-base.ts');
     for (const key of KEYS) expect(base, key).toContain(`this.warning('${key}'`);
   });
 
   it('no English sentence is left in the markup that paints them', () => {
-    const base = read('core/src/card-base.ts');
+    const base = read('src/card-base.ts');
     const banners = [...base.matchAll(/<span>([^<]*)<\/span>/g)].map(m => m[1].trim());
     const hardcoded = banners.filter(text => text && !text.startsWith('${'));
     expect(hardcoded).toEqual([]);

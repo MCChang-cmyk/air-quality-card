@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // PO decision 2026-08-15 (#5): `min` and `max` accept both forms, the type
 // decides at runtime, a number is a scale boundary (what the README has always
@@ -21,7 +21,7 @@ const hass = {
 };
 
 function build(sensor) {
-  const card = new PoolMonitorCard();
+  const card = new AirQualityCard();
   card.hass = hass;
   card.setConfig({ sensors: { power: sensor } });
   return card.processData().power_1;

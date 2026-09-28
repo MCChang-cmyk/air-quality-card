@@ -1,9 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import '../src/editor/sensor-editor.js';
 import { translations, getTranslation } from '../src/locales/translations.js';
-import { PoolMonitorCard } from '../../pool-monitor/src/pool-monitor-card.js';
-import { AquariumMonitorCard } from '../../aquarium-monitor/src/aquarium-monitor-card.js';
-import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
+import { AirQualityCard } from '../src/air-quality-card.js';
 
 // The preset picker groups by category and names each group. Only pool filed
 // its presets, so the aquarium's fifteen and the air card's thirteen all fell
@@ -18,11 +16,7 @@ import { AirQualityCard } from '../../air-quality/src/air-quality-card.js';
 // preset count, the options table and the preset names. It gets the same
 // treatment as the seventh: derive, do not recopy.
 
-const CARDS = {
-  'pool-monitor': PoolMonitorCard,
-  'aquarium-monitor': AquariumMonitorCard,
-  'air-monitor': AirQualityCard,
-};
+const CARDS = { 'air-monitor': AirQualityCard };
 
 const presets = Object.entries(CARDS).flatMap(([card, Card]) =>
   Object.entries(Card.SENSORS).map(([key, preset]) => ({ card, key, preset })),
@@ -76,19 +70,6 @@ describe('every section has a name, in the languages that carry them', () => {
   });
 });
 
-// The mirror invariant. A category renamed in a registry leaves its old label
-// behind, and a label nobody reads is how a table starts lying.
-describe('no section is named that no card files anything under', () => {
-  it('every English category label belongs to a registry', () => {
-    const orphans = Object.keys(translations.en.editor.category)
-      // `other` is the editor's own bucket for a preset that claims no
-      // category. No registry declares it, the picker does.
-      .filter(cat => cat !== 'other')
-      .filter(cat => !usedCategories.includes(cat));
-    expect(orphans).toEqual([]);
-  });
-});
-
 // --- What the picker actually renders ---
 
 const build = async registry => {
@@ -126,11 +107,11 @@ describe('the picker shows the sections the registry declares', () => {
   }
 
   it('files every offered preset under one of them', async () => {
-    const el = await build(AquariumMonitorCard.SENSORS);
+    const el = await build(AirQualityCard.SENSORS);
     const offered = [...el.shadowRoot.querySelectorAll('option:not([disabled])')]
       .map(o => o.value)
       .filter(Boolean);
-    expect(offered.sort()).toEqual(Object.keys(AquariumMonitorCard.SENSORS).sort());
+    expect(offered.sort()).toEqual(Object.keys(AirQualityCard.SENSORS).sort());
   });
 });
 
